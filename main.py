@@ -10,14 +10,14 @@ api_key = os.environ.get('OPENAI_API_KEY')
 
 def run():
     # init
-    sys_prompt_path = './config/sys_prompt.txt'
+    prompt_path = './config/prompt.txt'
     input_path = './input/'
     output_path = './result/'
     sys_prompt = user_prompt = ''
 
     # get system prompt and user's prompt, then combine them to prompt.
-    with open(sys_prompt_path) as sys_file:
-        prompt_dict = json.loads(sys_file.readline())
+    with open(prompt_path) as prompt_file:
+        prompt_dict = json.loads(prompt_file.readline())
         sys_prompt = prompt_dict['sys_prompt']
         user_prompt = prompt_dict['user_prompt']
         prompt = sys_prompt + user_prompt
