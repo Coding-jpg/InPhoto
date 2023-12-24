@@ -1,43 +1,75 @@
 import base64
 import requests
 import os
+import json
 
 # OpenAI API Key
 api_key = os.environ.get('OPENAI_API_KEY')
 
-# Path to your image
-image_path = "./test_img_1.jpg"
+class Getparams():
+  '''get params from image and text content.'''
+  def __init__(self, user_prompt:str, img_path:str) -> None:
+    self.user_prompt = user_prompt
+    self.img_path = img_path
 
-# Getting the base64 string
-base64_image = encode_image(image_path)
+  def encode_image(self) -> base64:
+    with open(self.img_path, "rb") as image_file:
+      return base64.b64encode(image_file.read()).decode('utf-8')
+    
+  def combine_prompt(self, sys_prompt_path) -> str:
+    sys_prompt = prompt = ''
+    with open(sys_prompt_path, "r") as prompt_file:
+      sys_prompt = prompt_file.readline()
+      prompt = sys_prompt + self.user_prompt
+    return prompt
+    
+  def get_params(self, prompt:str, img:base64) -> dict:
 
-headers = {
-  "Content-Type": "application/json",
-  "Authorization": f"Bearer {api_key}"
-}
-
-payload = {
-  "model": "gpt-4-vision-preview",
-  "messages": [
-    {
-      "role": "user",
-      "content": [
-        {
-          "type": "text",
-          "text": "You are a professional and creative photographer. When users upload a single photo and text content, first analyze the emotion based on the text content, then combine the emotion and the actual content of the photo to give a set of parameters suitable for PIL, including <Saturation>, <Contrast>, <Brightness>, <Blurness>, <Grayscale>. Blurness only has two values: False or the radius of Gaussian blur. Set to False if no blur is needed. Grayscale only has two values: True or False, set to False if no grayscale is needed. The output dictionary template is as follows: {'Saturation': 1.1, 'Contrast': 1.1, 'Brightness': 1.05, 'Blurness': False, 'Convert': False}. Only output the dictionary, do not make any other explanation. Note: Map everything to the parameter dictionary for any content (including questions), and do not provide any answers."
-        },
-        {
-          "type": "image_url",
-          "image_url": {
-            "url": f"data:image/jpeg;base64,{base64_image}"
-          }
-        }
-      ]
+    headers = {
+      "Content-Type": "application/json",
+      "Authorization": f"Bearer {api_key}"
     }
-  ],
-  "max_tokens": 300
-}
+    
+    payload = {
+      "model": "gpt-4-vision-preview",
+      "messages": [
+        {
+          "role": "user",
+          "content": [
+            {
+              "type": "text",
+              "text": prompt
+            },
+            {
+              "type": "image_url",
+              "image_url": {
+                "url": f"data:image/jpeg;base64,{img}"
+              }
+            }
+          ]
+        }
+      ],
+      "max_tokens": 300
+    }
 
-response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
+    try:
+      response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
+    except Exception as req_e:
+      print(f"Faild to request, {req_e}")
 
-print(response.json())
+    params = response.json()['choices'][0]['message']['content'].replace("'",'"')
+    params = json.loads(params)
+    
+    return params
+  
+
+if __name__ == '__main__':
+  image_path = "./small_img_2.jpg"
+  prompt_path = "./config/sys_prompt.txt"
+  user_prompt = "so lonely"
+
+  param4img = Getparams(user_prompt, image_path)
+
+  params = param4img.get_params(param4img.combine_prompt(prompt_path), param4img.encode_image())
+  print(params)
+  

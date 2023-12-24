@@ -26,7 +26,7 @@ class Photogragh():
             img = img.filter(ImageFilter.GaussianBlur(radius=self.config['Blurness']))
 
         # Convert
-        if self.config['Convert'] == True:
+        if self.config['Grayscale'] == True:
             img = img.convert('L')
 
         return img
