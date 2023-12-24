@@ -22,17 +22,18 @@ class Photogragh():
         img = Brig_enhancer.enhance(self.config['Brightness'])
 
         # Blurness
-        if self.config['Blurness'] is not None:
+        if self.config['Blurness'] == True:
             img = img.filter(ImageFilter.GaussianBlur(radius=self.config['Blurness']))
 
         # Convert
-        if self.config['Convert'] is not None:
+        if self.config['Convert'] == True:
             img = img.convert('L')
 
         return img
     
 if __name__ == "__main__":
-    config = {'Saturation':1.1, 'Contrast':1.1, 'Brightness':1.05, 'Blurness':None, 'Convert':None}
+    # config = {'Saturation':1.1, 'Contrast':1.1, 'Brightness':1.05, 'Blurness':False, 'Convert':False}
+    config = {'Saturation': 0.8, 'Contrast': 0.9, 'Brightness': 0.85, 'Blurness': False, 'Convert': False}
     photogragher = Photogragh(config=config)  
     result_img = photogragher.params_process(img_path='./test_img_2.jpg')
-    result_img.save('./relax_1.jpg')
+    result_img.save('./painful_1.jpg')
