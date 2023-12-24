@@ -71,5 +71,5 @@ if __name__ == '__main__':
   param4img = Getparams(user_prompt, image_path)
 
   params = param4img.get_params(param4img.combine_prompt(prompt_path), param4img.encode_image())
-  print(params)
+ 
   
