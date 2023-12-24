@@ -1,33 +1,38 @@
 from PIL import Image, ImageEnhance, ImageFilter
 
-def enhance_loneliness(image_path):
-    # 打开图像
-    img = Image.open(image_path)
+class Photogragh():
+    '''
+    Load configure, process the single image with configure.
+    '''
+    def __init__(self, config:dict) -> None:
+        self.config = config
 
-    # 调整色温，增加蓝色调
-    enhancer = ImageEnhance.Color(img)
-    img = enhancer.enhance(0.5)  # 减少饱和度来给予冷色调
+    def params_process(self, img_path) -> Image:
+        img = Image.open(img_path)
+        # Saturation
+        Sat_enhancer = ImageEnhance.Color(img)
+        img = Sat_enhancer.enhance(self.config['Saturation'])
 
-    # 调整对比度，增加图像的戏剧性
-    enhancer = ImageEnhance.Contrast(img)
-    img = enhancer.enhance(1.5)  # 增加对比度
+        # Contrast
+        Cont_enhancer = ImageEnhance.Contrast(img)
+        img = Cont_enhancer.enhance(self.config['Contrast'])
 
-    # 调整亮度，降低以暗示阴郁
-    enhancer = ImageEnhance.Brightness(img)
-    img = enhancer.enhance(0.8)  # 降低亮度
+        # Brightness
+        Brig_enhancer = ImageEnhance.Brightness(img)
+        img = Brig_enhancer.enhance(self.config['Brightness'])
 
-    # 应用轻微模糊，增加梦幻感
-    img = img.filter(ImageFilter.GaussianBlur(radius=1))
+        # Blurness
+        if self.config['Blurness'] is not None:
+            img = img.filter(ImageFilter.GaussianBlur(radius=self.config['Blurness']))
 
-    # # 转换成黑白，加强孤独感
-    # img = img.convert('L')
+        # Convert
+        if self.config['Convert'] is not None:
+            img = img.convert('L')
 
-    return img
-
-# 使用函数
-image_path = "./test_img.jpg"
-lonely_image = enhance_loneliness(image_path)
-
-# 保存图像
-output_path = "./lonely_image.jpg"
-lonely_image.save(output_path)
+        return img
+    
+if __name__ == "__main__":
+    config = {'Saturation':1.1, 'Contrast':1.1, 'Brightness':1.05, 'Blurness':None, 'Convert':None}
+    photogragher = Photogragh(config=config)  
+    result_img = photogragher.params_process(img_path='./test_img_2.jpg')
+    result_img.save('./relax_1.jpg')
