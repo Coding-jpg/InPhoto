@@ -1,4 +1,5 @@
 from PIL import Image, ImageEnhance, ImageFilter
+from utils.decorators import log
 
 class Photogragh():
     '''
@@ -6,7 +7,9 @@ class Photogragh():
     '''
     def __init__(self, config:dict) -> None:
         self.config = config
+        self.img = None
 
+    @log
     def params_process(self, img_path) -> Image:
         img = Image.open(img_path)
         # Saturation
@@ -29,8 +32,15 @@ class Photogragh():
         if self.config['Grayscale'] == True:
             img = img.convert('L')
 
+        self.img = img
+
         return img
     
+    def save_img(self, result_path:str) -> True:
+        self.img.save(result_path)
+
+        return True
+
 if __name__ == "__main__":
     # config = {'Saturation':1.1, 'Contrast':1.1, 'Brightness':1.05, 'Blurness':False, 'Convert':False}
     config = {'Saturation': 0.8, 'Contrast': 0.9, 'Brightness': 0.85, 'Blurness': False, 'Convert': False}

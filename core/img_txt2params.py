@@ -2,6 +2,7 @@ import base64
 import requests
 import os
 import json
+from utils.decorators import log
 
 # OpenAI API Key
 api_key = os.environ.get('OPENAI_API_KEY')
@@ -15,14 +16,8 @@ class Getparams():
   def encode_image(self) -> base64:
     with open(self.img_path, "rb") as image_file:
       return base64.b64encode(image_file.read()).decode('utf-8')
-    
-  def combine_prompt(self, sys_prompt_path) -> str:
-    sys_prompt = prompt = ''
-    with open(sys_prompt_path, "r") as prompt_file:
-      sys_prompt = prompt_file.readline()
-      prompt = sys_prompt + self.user_prompt
-    return prompt
-    
+  
+  @log
   def get_params(self, prompt:str, img:base64) -> dict:
 
     headers = {
@@ -65,11 +60,11 @@ class Getparams():
 
 if __name__ == '__main__':
   image_path = "./small_img_2.jpg"
-  prompt_path = "./config/sys_prompt.txt"
-  user_prompt = "so lonely"
+  sys_prompt_path = "./config/sys_prompt.txt"
+  user_prompt_path = "./config/user_prompt.txt"
 
-  param4img = Getparams(user_prompt, image_path)
+  param4img = Getparams(user_prompt_path, image_path)
 
-  params = param4img.get_params(param4img.combine_prompt(prompt_path), param4img.encode_image())
+  params = param4img.get_params(param4img.combine_prompt(sys_prompt_path), param4img.encode_image())
  
   
