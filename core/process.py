@@ -1,4 +1,4 @@
-from PIL import Image, ImageEnhance, ImageFilter
+from PIL import Image, ImageEnhance, ImageFilter, ImageFont, ImageDraw
 from utils.decorators import log
 
 class Photogragh():
@@ -8,10 +8,14 @@ class Photogragh():
     def __init__(self, config:dict) -> None:
         self.config = config
         self.img = None
+        self.origin_img = None
 
     @log
-    def params_process(self, img_path) -> Image:
-        img = Image.open(img_path)
+    def params_process(self, img_path:str) -> Image:
+        '''Core process function
+        Saturation, Contrast, Brightness, Blurness, Convert, Color channels balance
+        '''
+        self.origin_img = img = Image.open(img_path)
         # Saturation
         Sat_enhancer = ImageEnhance.Color(img)
         img = Sat_enhancer.enhance(self.config['Saturation'])
@@ -37,7 +41,6 @@ class Photogragh():
             r_channel = self.config['RGB'][0]
             g_channel = self.config['RGB'][1]
             b_channel = self.config['RGB'][2]
-            print(r_channel,g_channel,b_channel)
             img = self.color_balance_process(img, r_channel, g_channel, b_channel)
 
         self.img = img
@@ -56,8 +59,35 @@ class Photogragh():
 
         return result_rgb
     
-    def save_img(self, result_path:str) -> True:
-        self.img.save(result_path)
+    def save_img(self, result_path:str, mode:str, prompt:str) -> True:
+        if mode == "pure":
+            # directly save the result
+            self.img.save(result_path)
+        elif mode == "compare":
+            # concat the origin img and result img, for test
+            img_name_1 = 'Origin'
+            img_name_2 = prompt
+            
+            font = ImageFont.load_default()
+
+            max_height = max(self.origin_img.height, self.img.height)
+            total_width = self.origin_img.width + self.img.width
+
+            new_image = Image.new('RGB', (total_width, max_height + 50), 'white')
+            draw = ImageDraw.Draw(new_image)
+
+            new_image.paste(self.origin_img, (0, 0))
+            new_image.paste(self.img, (self.origin_img.width, 0))
+            
+            text_width1 = draw.textlength(img_name_1, font=font)
+            text_x1 = self.origin_img.width // 2 - text_width1 // 2
+            draw.text((text_x1, max_height + 10), img_name_1, fill="black", font=font)
+
+            text_width2 = draw.textlength(img_name_2, font=font)
+            text_x2 = self.origin_img.width + self.img.width // 2 - text_width2 // 2
+            draw.text((text_x2, max_height + 10), img_name_2, fill="black", font=font)
+
+            new_image.save(result_path)
 
         return True
 

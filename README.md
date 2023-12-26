@@ -32,4 +32,5 @@ that's it. You can see the result img in ./result after process finished.
 
 TODO LIST 
 - [ ] More parameters for photogragh
+- [ ] A bunch of "perfect" default parameters
 - [ ] Automatic composition
