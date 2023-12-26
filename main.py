@@ -26,10 +26,9 @@ def run():
     for dirpath, dirnames, filenames in os.walk(input_path):
         for file in filenames:
             origin_img_path = os.path.join(dirpath, file)
-            img_path = downscale(origin_img_path, (150,150), output_path)
-            param4img = Getparams(user_prompt, img_path)
+            img = downscale(origin_img_path, (150,150), output_path)
+            param4img = Getparams(user_prompt, img)
             params = param4img.get_params(prompt, param4img.encode_image())
-            os.remove(img_path)
             Photogragher = Photogragh(config=params)
             Photogragher.params_process(img_path=origin_img_path)
             Photogragher.save_img(os.path.join(output_path, f"result_{file}"))

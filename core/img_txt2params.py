@@ -3,20 +3,27 @@ import requests
 import os
 import json
 from utils.decorators import log
+from PIL import Image
+import io
 
 # OpenAI API Key
 api_key = os.environ.get('OPENAI_API_KEY')
 
 class Getparams():
   '''get params from image and text content.'''
-  def __init__(self, user_prompt:str, img_path:str) -> None:
+  def __init__(self, user_prompt:str, img:Image) -> None:
     self.user_prompt = user_prompt
-    self.img_path = img_path
-
+    self.img = img
+    
   def encode_image(self) -> base64:
-    with open(self.img_path, "rb") as image_file:
-      return base64.b64encode(image_file.read()).decode('utf-8')
-  
+    # use byte io to save PIL Image
+    buffered = io.BytesIO()
+    self.img.save(buffered, format="JPEG")
+    img_data = buffered.getvalue()
+    img_base64_str = base64.b64encode(img_data).decode('utf-8')
+
+    return img_base64_str
+
   @log
   def get_params(self, prompt:str, img:base64) -> dict:
 
