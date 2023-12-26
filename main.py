@@ -33,13 +33,6 @@ def run():
             Photogragher = Photogragh(config=params)
             Photogragher.params_process(img_path=origin_img_path)
             Photogragher.save_img(os.path.join(output_path, f"result_{file}"))
-        
-    # image_path = "./small_img_2.jpg"
-    # prompt_path = "./config/sys_prompt.txt"
-    # user_prompt = "so lonely"
-    # param4img = Getparams(user_prompt, image_path)
-    # params = param4img.get_params(param4img.combine_prompt(prompt_path), param4img.encode_image())
-    
 
 if __name__ == '__main__':
     run()

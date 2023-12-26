@@ -25,16 +25,36 @@ class Photogragh():
         img = Brig_enhancer.enhance(self.config['Brightness'])
 
         # Blurness
-        if self.config['Blurness'] == True:
+        if self.config['Blurness'] is True:
             img = img.filter(ImageFilter.GaussianBlur(radius=self.config['Blurness']))
 
         # Convert
-        if self.config['Grayscale'] == True:
+        if self.config['Grayscale'] is True:
             img = img.convert('L')
+
+        # Color channels balance
+        if self.config['Grayscale'] is not True:
+            r_channel = self.config['RGB'][0]
+            g_channel = self.config['RGB'][1]
+            b_channel = self.config['RGB'][2]
+            print(r_channel,g_channel,b_channel)
+            img = self.color_balance_process(img, r_channel, g_channel, b_channel)
 
         self.img = img
 
         return img
+    
+    def color_balance_process(self, img:Image, red=1.0, green=1.0, blue=1.0) -> Image:
+        '''set the proportion of rgb channels'''
+        r, g, b = img.split()
+        
+        r = r.point(lambda i: i * red)
+        b = b.point(lambda i: i * blue)
+        g = g.point(lambda i: i * green)
+
+        result_rgb = Image.merge("RGB", (r,g,b))
+
+        return result_rgb
     
     def save_img(self, result_path:str) -> True:
         self.img.save(result_path)

@@ -49,11 +49,18 @@ class Getparams():
 
     try:
       response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
+      print(response.text)
     except Exception as req_e:
       print(f"Faild to request, {req_e}")
 
-    params = response.json()['choices'][0]['message']['content'].replace("'",'"')
-    params = json.loads(params)
+    # resolve
+    try:
+      params = response.json()['choices'][0]['message']['content'].replace("'",'"')
+      params = json.loads(params)
+      print(params)
+      print(f"Successfully resolve the response from openai.\n")
+    except Exception as res_e:
+      print(f"Failed to resolve the response from openai, {res_e}\n")
     
     return params
   
