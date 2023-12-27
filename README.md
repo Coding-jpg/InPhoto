@@ -7,9 +7,9 @@ Tool for intelligent photogragh
 ### Examples
 ![Painful,hopeless life](examples/result_test_img_1.jpg)
 ![an interesting and exciting journey](examples/result_test_img_2.jpg)
-![Old picture](examples/result_test_img_3.jpg)
-![Bright](examples/result_test_img_4.jpg)
-![bright, sunny, a good dayoff](examples/result_test_img_5.jpg)
+![Old picture](examples/result_test_img_4.jpg)
+![Bright](examples/result_test_img_5.jpg)
+![bright, sunny, a good dayoff](examples/result_test_img_6.jpg)
 
 ### Tutorial(Local)
 
