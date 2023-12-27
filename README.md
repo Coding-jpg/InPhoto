@@ -5,7 +5,11 @@ Tool for intelligent photogragh
 "When I'm out traveling and want to capture and share the moments, or just when I feel like expressing my mood in everyday life, snapping a photo is super handy. But here's the catch: to get a photo that really shows off my personal style and feelings, I need to know all about tweaking different settings. That's a whole lot of time and money spent on getting good at photography. Or, I could just slap on some over-the-top filter or go for a stiff, cookie-cutter AI beauty effect. So, I'm thinking, why not make a photography tool that's more me? Something where I can just say what I'm feeling or what I'm looking for, and it'll jazz up my quick pics into something that's really my own, like my personal piece of art."
 
 ### Examples
-
+![Painful,hopeless life](example/result_test_img_1.jpg)
+![an interesting and exciting journey](example/result_test_img_2.jpg)
+![Old picture](example/result_test_img_3.jpg)
+![Bright](example/result_test_img_4.jpg)
+![bright, sunny, a good dayoff](example/result_test_img_5.jpg)
 
 ### Tutorial(Local)
 
