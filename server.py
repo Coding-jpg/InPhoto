@@ -19,22 +19,25 @@ class data(BaseModel):
 # Route
 @app.post("/v1/")
 def post_process(item:data):
-    # combine prompt
-    with open('./config/prompt.txt') as prompt_file:
-        prompt_dict = json.loads(prompt_file.readline())
-        sys_prompt = prompt_dict['sys_prompt']
-        prompt = sys_prompt + item.prompt
+    try:
+        # combine prompt
+        with open('./config/prompt.txt') as prompt_file:
+            prompt_dict = json.loads(prompt_file.readline())
+            sys_prompt = prompt_dict['sys_prompt']
+            prompt = sys_prompt + item.prompt
 
-    # decode base64 to PIL Image
-    img_data = base64.b64decode(item.img)
-    origin_img = Image.open(BytesIO(img_data))
+        # decode base64 to PIL Image
+        img_data = base64.b64decode(item.img)
+        origin_img = Image.open(BytesIO(img_data))
 
-    # post_process
-    img = downscale(origin_img, (150,150))
-    param4img = Getparams(item.prompt, img)
-    params = param4img.get_params(prompt, param4img.encode_image())
-    Photogragher = Photogragh(config=params)
-    Photogragher.params_process(img2process=origin_img)
-    result_base64_str = Photogragher.return_base64_str_result()
+        # post_process
+        img = downscale(origin_img, (150,150))
+        param4img = Getparams(item.prompt, img)
+        params = param4img.get_params(prompt, param4img.encode_image())
+        Photogragher = Photogragh(config=params)
+        Photogragher.params_process(img2process=origin_img)
+        result_base64_str = Photogragher.return_base64_str_result()
 
-    return {"res_img":f"{result_base64_str}"}
+        return {"res_img":f"{result_base64_str}"}
+    except Exception as e:
+        print(f"Failed to load server, {e}")
