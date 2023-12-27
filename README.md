@@ -7,7 +7,7 @@ Tool for intelligent photogragh
 ### Examples
 
 
-### Tutorial
+### Tutorial(Local)
 
 Step 1 API Key
 set your openai api key
@@ -33,6 +33,13 @@ in root dir of project
 python main.py
 ```
 that's it. You can see the result img in ./result after process finished.
+
+### Tutorial(Server)
+
+install requirements and export OPENAI_API_KEY，then
+```
+uvicorn server:app --reload
+```
 
 TODO LIST 
 - [ ] More parameters for photogragh
