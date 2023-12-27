@@ -1,5 +1,7 @@
 from PIL import Image, ImageEnhance, ImageFilter, ImageFont, ImageDraw
 from utils.decorators import log
+from io import BytesIO
+import base64
 
 class Photogragh():
     '''
@@ -8,14 +10,13 @@ class Photogragh():
     def __init__(self, config:dict) -> None:
         self.config = config
         self.img = None
-        self.origin_img = None
 
     @log
-    def params_process(self, img_path:str) -> Image:
+    def params_process(self, img2process:Image) -> Image:
         '''Core process function
         Saturation, Contrast, Brightness, Blurness, Convert, Color channels balance
         '''
-        self.origin_img = img = Image.open(img_path)
+        img = img2process
         # Saturation
         Sat_enhancer = ImageEnhance.Color(img)
         img = Sat_enhancer.enhance(self.config['Saturation'])
@@ -90,6 +91,16 @@ class Photogragh():
             new_image.save(result_path)
 
         return True
+    
+    def return_base64_str_result(self) -> str:
+        '''encode PIL Image to base64, then decode to str'''
+        buffered = BytesIO()
+        self.img.save(buffered, format="JPEG")
+        img_byte = buffered.getvalue()
+        img_base64 = base64.b64encode(img_byte)
+        img_base64_str = img_base64.decode()
+
+        return img_base64_str
 
 if __name__ == "__main__":
     # config = {'Saturation':1.1, 'Contrast':1.1, 'Brightness':1.05, 'Blurness':False, 'Convert':False}

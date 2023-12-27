@@ -5,9 +5,8 @@ from utils.decorators import log
 import time
 
 @log
-def downscale(img_path:str, scale:tuple) -> str:
+def downscale(img:Image, scale:tuple) -> str:
     '''downscale to scale, img_path is the path of origin img'''
-    img = Image.open(img_path)
     resize_img = img.resize(scale)
     return resize_img
 

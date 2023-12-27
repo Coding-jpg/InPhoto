@@ -1,6 +1,7 @@
 from core.img_txt2params import Getparams
 from core.process import Photogragh
 from utils.pre_process import downscale
+from PIL import Image
 import os
 import json
 from utils.decorators import time_count
@@ -27,11 +28,12 @@ def run() -> bool:
     for dirpath, _, filenames in os.walk(input_path):
         for file in filenames:
             origin_img_path = os.path.join(dirpath, file)
-            img = downscale(origin_img_path, (150,150))
+            origin_img = Image.open(origin_img_path)
+            img = downscale(origin_img, (150,150))
             param4img = Getparams(user_prompt, img)
             params = param4img.get_params(prompt, param4img.encode_image())
             Photogragher = Photogragh(config=params)
-            Photogragher.params_process(img_path=origin_img_path)
+            Photogragher.params_process(img2process=origin_img)
             Photogragher.save_img(os.path.join(output_path, f"result_{file}"), mode='compare', prompt=user_prompt)
 
     return True
