@@ -9,14 +9,14 @@ class Photogragh():
     '''
     def __init__(self, config:dict) -> None:
         self.config = config
-        self.img = None
+        self.img = self.origin_img = None
 
     @log
     def params_process(self, img2process:Image) -> Image:
         '''Core process function
         Saturation, Contrast, Brightness, Blurness, Convert, Color channels balance
         '''
-        img = img2process
+        img = self.origin_img = img2process
         # Saturation
         Sat_enhancer = ImageEnhance.Color(img)
         img = Sat_enhancer.enhance(self.config['Saturation'])

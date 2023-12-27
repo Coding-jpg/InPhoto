@@ -6,9 +6,6 @@ import os
 import json
 from utils.decorators import time_count
 
-# openai api key
-api_key = os.environ.get('OPENAI_API_KEY')
-
 @time_count
 def run() -> bool:
     # init
